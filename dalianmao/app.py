@@ -31,7 +31,7 @@ class DaLianMao:
         return wrapper
 
     def add_route(self, handler, url, json=False, extract_urls = None):
-        self.route(url, dynamic, json)(handler)
+        self.route(url, json, extract_urls)(handler)
 
     def remove_route(self, url):
         self.router.remove(url)
