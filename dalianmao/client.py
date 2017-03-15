@@ -54,17 +54,18 @@ class Client:
                 if referer:
                     headers['Referer'] = referer
                 time.sleep(random.random()*self.options.magic)
-                resp = await self.session.request(method = method,
-                                                  url = url,
-                                                  headers = headers,
-                                                  params = params,
-                                                  data = data,
-                                                  proxy = proxy,
-                                                  proxy_auth = None,
-                                                  allow_redirects = self.options.allow_redirects,
-                                                  max_redirects = self.options.max_redirects,
-                                                  timeout = self.options.timeout
-                                                  )
+                resp = await self.session.request(
+                    method = method,
+                    url = url,
+                    headers = headers,
+                    params = params,
+                    data = data,
+                    proxy = proxy,
+                    proxy_auth = None,
+                    allow_redirects = self.options.allow_redirects,
+                    max_redirects = self.options.max_redirects,
+                    timeout = self.options.timeout
+                )
             except:
                 retry += 1
                 if retry > self.options.max_retry:
