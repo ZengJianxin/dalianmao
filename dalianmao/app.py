@@ -21,7 +21,7 @@ class DaLianMao:
         self.router = Router()
         self.engine = Engine(loop, options, self.router)
         self.download = self.engine.client.download
-        self.run_in_executor = asyncio.run_in_executor
+        self.run_in_executor = self.loop.run_in_executor
 
     def route(self, url, method='GET', params=None, data=None, json=False, extract_urls=None):
 
