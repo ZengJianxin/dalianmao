@@ -7,3 +7,8 @@
 * pip install dalianmao
 * 下载源码后用 python setup.py 安装
 ## 使用
+大脸猫爬虫框架的__init__.py引入了三个类：Executor，Options，和DaLianMao
+* Executor为标准库concurrent.futures中的ProcessPoolExecutor
+* Options为配置文件，可以设置爬虫名字name: str，初始链接start_urls: list，这两个设置项是Options初始化
+必须指明的，如：
+options = Options(name='wandoujia', start_urls=['http://www.wandoujia.com/apps', ])其它缺省项将在后面详述
