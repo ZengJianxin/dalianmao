@@ -5,7 +5,7 @@
 该框架依赖于uvloop，aiohttp，aiofiles，Motor，BeautifulSoup等非python标准库，使用前应确保安装，pip可以自动安装
 ## 安装
 * pip install dalianmao
-* 下载源码后用 python setup.py 安装
+* 下载源码后用 python setup.py install安装
 ## 使用
 大脸猫爬虫框架的__init__.py引入了三个类：Executor，Options，和DaLianMao。在新建爬虫时，Options和DaLianMao必须引入<br>
 from dalianmao import Options, DaLianMao
