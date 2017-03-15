@@ -9,7 +9,7 @@
 ## 使用
 大脸猫爬虫框架的__init__.py引入了三个类：Executor，Options，和DaLianMao。在新建爬虫时，Options和DaLianMao必须引入<br>
 from dalianmao import Options, DaLianMao
-* Executor为标准库concurrent.futures中的ProcessPoolExecutor
+* Executor为标准库concurrent.futures中的ProcessPoolExecutor，可以通过asyncio中的AbstractLoop.run_in_executor使用
 * Options为配置文件，可以设置爬虫名字name: str，初始链接start_urls: list，这两个设置项是Options初始化
 必须指明的，如：<br>
 options = Options(name='wandoujia', start_urls=['http://www.wandoujia.com/apps', ])，
