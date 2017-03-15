@@ -8,7 +8,6 @@ from urllib import parse
 
 import aiofiles
 from aiohttp import TCPConnector, ClientSession
-from aiohttp.errors import ClientResponseError, TimeoutError
 from bs4 import BeautifulSoup as bs
 
 from dalianmao.exceptions import RetryError
