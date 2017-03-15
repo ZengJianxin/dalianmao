@@ -1,0 +1,5 @@
+uvloop
+aiohttp
+aiofiles
+motor
+beautifulsoup4
