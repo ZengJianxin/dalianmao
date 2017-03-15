@@ -103,7 +103,7 @@ class Client:
         try:
             resp = await self.get(url)
         except RetryError:
-            message = 'RetryError' + ' ' + 'Failed on geting:' + ' ' + url
+            message = 'RetryError' + ' ' + 'Failed on getting:' + ' ' + url
             await self.logger.warn(message)
             return [], details['handler'].__name__, None
         if resp.url != url:
@@ -133,7 +133,7 @@ class Client:
                 message = 'Faild on parsing:' + ' ' + url + '\n' + traceback.format_exc()
                 await self.logger.debug(message)
         else:
-            message = str(resp.status) + ' ' +'Failed on geting:' + ' ' + url
+            message = str(resp.status) + ' ' +'Failed on getting:' + ' ' + url
             await self.logger.warn(message)
         await resp.release()
         return urls, name, data
