@@ -99,36 +99,36 @@ class Client:
                 urls.remove(url)
         return urls
 
-    async def get_data(self, url, details):
+    async def get_data(self, url, handlers):
         try:
             resp = await self.get(url)
         except RetryError:
             message = 'RetryError' + ' ' + 'Failed on requesting:' + ' ' + url
             await self.logger.warn(message)
-            return [], details['handler'].__name__, None
+            return [], handlers['handler'].__name__, None
         if resp.url != url:
             message = str(resp.status) + ' ' + url + ' redirected to ' + resp.url
             await self.logger.warn(message)
-            details = self.router.get(resp.url)
-            if not details:
+            handlers = self.router.get(resp.url)
+            if not handlers:
                 await resp.release()
                 return [], None, None
         urls = []
-        name = details['handler'].__name__
+        name = handlers['handler'].__name__
         data = None
         if resp.status // 100 == 2:
             try:
-                if details['json']:
+                if handlers['json']:
                     data = await resp.json()
                 else:
                     content = await resp.text()
                     soup = bs(content, 'lxml')
-                if not details['extract_urls']:
+                if not handlers['extract_urls']:
                     urls = self.extract_urls(resp.url, soup)
                 else:
-                    urls = details['extract_urls'](resp.url, soup)
+                    urls = handlers['extract_urls'](resp.url, soup)
                 urls = self.urls_filter(urls)
-                data = await details['handler'](resp.url, soup)
+                data = await handlers['handler'](resp.url, soup)
             except:
                 message = 'Faild on parsing:' + ' ' + url + '\n' + traceback.format_exc()
                 await self.logger.debug(message)

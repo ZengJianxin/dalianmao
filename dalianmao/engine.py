@@ -42,9 +42,9 @@ class Engine:
     async def worker(self):
         while True:
             url = await self.scheduler.get()
-            details = self.router.get(url)
-            if details:
-                urls, name, data = await self.client.get_data(url, details)
+            handlers = self.router.get(url)
+            if handlers:
+                urls, name, data = await self.client.get_data(url, handlers)
                 await self.scheduler.put(urls)
                 if data:
                     for datum in data:
