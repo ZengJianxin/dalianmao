@@ -58,7 +58,6 @@ class Client:
                     url = url,
                     headers = headers,
                     proxy = proxy,
-                    proxy_auth = None,
                     allow_redirects = self.options.allow_redirects,
                     max_redirects = self.options.max_redirects,
                     timeout = self.options.timeout
