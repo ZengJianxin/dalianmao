@@ -3,4 +3,6 @@
 ## 依赖
 该框架依赖于uvloop，aiohttp，aiofiles，Motor等非python标准库，使用前应确保安装
 ## 安装
+* pip install dalianmao
+* 下载源码后用 python setup.py 安装
 ## 使用
