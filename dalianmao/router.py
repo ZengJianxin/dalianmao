@@ -7,12 +7,9 @@ class Router:
     def __init__(self):
         self.handlers = OrderedDict()
 
-    def add(self, handler, url, method, params, data, json, extract_urls):
+    def add(self, handler, url, json, extract_urls):
         url = re.compile(url)
         self.handlers[url] = {
-            'method': method,
-            'params': params,
-            'data': data,
             'json': json,
             'extract_urls': extract_urls,
             'handler': handler

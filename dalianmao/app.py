@@ -23,15 +23,15 @@ class DaLianMao:
         self.download = self.engine.client.download
         self.run_in_executor = self.loop.run_in_executor
 
-    def route(self, url, method='GET', params=None, data=None, json=False, extract_urls=None):
+    def route(self, url, json=False, extract_urls=None):
 
         def wrapper(handler):
-            self.router.add(handler, url, method, params, data, json, extract_urls)
+            self.router.add(handler, url, json, extract_urls)
 
         return wrapper
 
-    def add_route(self, handler, url, method='GET', params=None, data=None, json=False, extract_urls = None):
-        self.route(url, method, params, data, dynamic, json)(handler)
+    def add_route(self, handler, url, json=False, extract_urls = None):
+        self.route(url, dynamic, json)(handler)
 
     def remove_route(self, url):
         self.router.remove(url)

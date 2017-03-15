@@ -42,7 +42,7 @@ class Client:
         if proxy in self.proxies:
             self.proxies.remove(proxy)
 
-    async def request(self, url, method='GET', params=None, data=None, referer=None):
+    async def get(self, url, referer=None):
         if not self.session:
             conn = TCPConnector(limit=self.options.concurrence, loop=self.loop)
             self.session = ClientSession(connector=conn, loop=self.loop, cookies=self.options.cookies)
@@ -54,12 +54,9 @@ class Client:
                 if referer:
                     headers['Referer'] = referer
                 time.sleep(random.random()*self.options.magic)
-                resp = await self.session.request(
-                    method = method,
+                resp = await self.session.get(
                     url = url,
                     headers = headers,
-                    params = params,
-                    data = data,
                     proxy = proxy,
                     proxy_auth = None,
                     allow_redirects = self.options.allow_redirects,
@@ -104,9 +101,9 @@ class Client:
 
     async def get_data(self, url, details):
         try:
-            resp = await self.request(url, details['method'], details['params'], details['data'])
+            resp = await self.get(url)
         except RetryError:
-            message = 'RetryError' + ' ' + 'Failed on requesting:' + ' ' + url
+            message = 'RetryError' + ' ' + 'Failed on geting:' + ' ' + url
             await self.logger.warn(message)
             return [], details['handler'].__name__, None
         if resp.url != url:
@@ -136,7 +133,7 @@ class Client:
                 message = 'Faild on parsing:' + ' ' + url + '\n' + traceback.format_exc()
                 await self.logger.debug(message)
         else:
-            message = str(resp.status) + ' ' +'Failed on requesting:' + ' ' + url
+            message = str(resp.status) + ' ' +'Failed on geting:' + ' ' + url
             await self.logger.warn(message)
         await resp.release()
         return urls, name, data
@@ -145,7 +142,7 @@ class Client:
         if not os.path.exists(path):
             os.mkdir(path)
         try:
-            resp = await self.request(url, referer=referer)
+            resp = await self.get(url, referer=referer)
         except RetryError:
             message = 'RetryError' + ' ' + 'Faild on downloading:' + ' ' + url
             await self.logger.warn(message)
