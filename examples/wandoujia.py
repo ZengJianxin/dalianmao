@@ -2,20 +2,9 @@ import os.path
 
 from dalianmao import DaLianMao, Options
 
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Accept-Language': 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3',
-    'Accept-Encoding': 'gzip, deflate',
-    'Connection': 'keep-alive',
-    'Upgrade-Insecure-Requests': '1',
-    'Cache-Control': 'max-age=0',
-    'Referer': 'http://www.wandoujia.com/apps'
-    }
 app_icon_path = os.path.join(os.path.dirname(__file__), 'app-icon')
-options = Options(name='wandoujia',
+options = Options(name='s',
                   start_urls= ['http://www.wandoujia.com/apps', ],
-                  headers=HEADERS,
                   concurrence=3
                  )
 app = DaLianMao(options)

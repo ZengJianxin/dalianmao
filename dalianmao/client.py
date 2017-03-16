@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime
+import json
 import os
 import random
 import time
@@ -44,24 +45,46 @@ class Client:
     async def get(self, url, referer=None):
         if not self.session:
             conn = TCPConnector(limit=self.options.concurrence, loop=self.loop)
-            self.session = ClientSession(connector=conn, loop=self.loop, cookies=self.options.cookies)
+            self.session = ClientSession(connector=conn,
+                loop=self.loop,
+                cookies=self.options.cookies
+            )
         proxy = self.get_proxy()
         retry = 0
         while True:
             try:
                 headers = self.options.headers
+                splitted_url = parse.urlsplit(url)
                 if referer:
                     headers['Referer'] = referer
+                else:
+                    headers['Referer'] = splitted_url.scheme + '://' + splitted_url.hostname
                 time.sleep(random.random()*self.options.magic)
-                resp = await self.session.get(
-                    url = url,
-                    headers = headers,
-                    proxy = proxy,
-                    allow_redirects = self.options.allow_redirects,
-                    max_redirects = self.options.max_redirects,
-                    timeout = self.options.timeout
-                )
+                if not self.options.dynamic:
+                    resp = await self.session.get(
+                        url = url,
+                        headers = headers,
+                        proxy = proxy,
+                        allow_redirects = self.options.allow_redirects,
+                        max_redirects = self.options.max_redirects,
+                        timeout = self.options.timeout
+                    )
+                else:
+                    # work with Splash
+                    if splitted_url.scheme == 'https':
+                        url_render = 'https://localhost:8051/render.html'
+                    else:
+                        url_render = 'http://localhost:8050/render.html'
+                    params = {'url': url}
+                    if proxy:
+                        params['proxy'] = proxy
+                    resp = await self.session.get(
+                        url=url_render,
+                        params=params,
+                        timeout=self.options.timeout
+                    )
             except:
+                traceback.print_exc()
                 retry += 1
                 if retry > self.options.max_retry:
                     raise RetryError()
@@ -88,7 +111,7 @@ class Client:
                 href = a['href']
                 if not href.startswith('http'):
                     href = parse.urljoin(url, href)
-            urls.append(url)
+            urls.append(href)
         return urls
 
     def urls_filter(self, urls):
@@ -104,10 +127,11 @@ class Client:
             message = 'RetryError' + ' ' + 'Failed on requesting:' + ' ' + url
             await self.logger.warn(message)
             return [], handlers['handler'].__name__, None
-        if resp.url != url:
+        if not self.options.dynamic and resp.url != url:
             message = str(resp.status) + ' ' + url + ' redirected to ' + resp.url
             await self.logger.warn(message)
-            handlers = self.router.get(resp.url)
+            url = resp.url
+            handlers = self.router.get(url)
             if not handlers:
                 await resp.release()
                 return [], None, None
@@ -122,11 +146,11 @@ class Client:
                     content = await resp.text()
                     soup = bs(content, 'lxml')
                 if not handlers['extract_urls']:
-                    urls = self.extract_urls(resp.url, soup)
+                    urls = self.extract_urls(url, soup)
                 else:
-                    urls = handlers['extract_urls'](resp.url, soup)
+                    urls = handlers['extract_urls'](url, soup)
                 urls = self.urls_filter(urls)
-                data = await handlers['handler'](resp.url, soup)
+                data = await handlers['handler'](url, soup)
             except:
                 message = 'Faild on parsing:' + ' ' + url + '\n' + traceback.format_exc()
                 await self.logger.debug(message)
