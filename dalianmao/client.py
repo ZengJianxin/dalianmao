@@ -1,6 +1,5 @@
 import asyncio
 from datetime import datetime
-import json
 import os
 import random
 import time
