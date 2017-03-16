@@ -41,7 +41,7 @@ class Client:
         if proxy in self.proxies:
             self.proxies.remove(proxy)
 
-    async def get(self, url, referer=None):
+    async def get(self, url, referer=None, js_source=None):
         if not self.session:
             conn = TCPConnector(limit=self.options.concurrence, loop=self.loop)
             self.session = ClientSession(connector=conn,
@@ -75,6 +75,7 @@ class Client:
                     else:
                         url_render = 'http://localhost:8050/render.html'
                     params = {'url': url}
+                    params['js_source'] = js_source
                     if proxy:
                         params['proxy'] = proxy
                     resp = await self.session.get(
@@ -121,7 +122,7 @@ class Client:
 
     async def get_data(self, url, handlers):
         try:
-            resp = await self.get(url)
+            resp = await self.get(url, js_source=handlers['js_source'])
         except RetryError:
             message = 'RetryError' + ' ' + 'Failed on requesting:' + ' ' + url
             await self.logger.warn(message)
