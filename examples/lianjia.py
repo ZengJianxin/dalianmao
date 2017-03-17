@@ -5,20 +5,9 @@ from dalianmao import DaLianMao, Options
 cityName = re.compile(r"(?<=cityName: ').*(?=')")
 city_name = re.compile(r"(?<=city_name: ').*(?=')")
 total_page = re.compile('\"totalPage\":[0-9]*')
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:51.0) Gecko/20100101 Firefox/51.0',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Accept-Language': 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3',
-    #'Accept-Encoding': 'gzip, deflate',
-    'Connection': 'keep-alive',
-    'Upgrade-Insecure-Requests': '1',
-    'Cache-Control': 'max-age=0'
-    }
-    
 
 options = Options(name='lianjia',
                   start_urls= ['http://xm.lianjia.com/', ],
-                  headers=HEADERS,
                   dynamic=True,
                   concurrence=3,
                   magic=5
@@ -170,15 +159,15 @@ async def chengjiao(url, soup):
         title = str(info.find('div', class_='title').a.string)
         address = ' '.join(list(info.find('div', class_='address').stripped_strings))
         flood = ' '.join(list(info.find('div', class_='flood').stripped_strings))
-        datum = {'city': city,
-                 'title': title,
-                 'address': address,
-                 'flood': flood
-                 }
         deal_house_info_bs = info.find('div', class_='dealHouseInfo')
         if deal_house_info_bs:
             deal_house_info = ' '.join(list(deal_house_info_bs.stripped_strings))
-            datum['deal_house_info'] = deal_huse_info
+        datum = {'city': city,
+                 'title': title,
+                 'address': address,
+                 'flood': flood,
+                 'house_info': deal_house_info
+                 }
         data.append(datum)
     return data
 
