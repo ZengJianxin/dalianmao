@@ -177,7 +177,7 @@ async def chengjiao(url, soup):
                  'title': title,
                  'address': address,
                  'flood': flood,
-                 'house_info': house_info
+                 'house_info': deal_house_info
                  }
         data.append(datum)
     return data
