@@ -170,15 +170,15 @@ async def chengjiao(url, soup):
         title = str(info.find('div', class_='title').a.string)
         address = ' '.join(list(info.find('div', class_='address').stripped_strings))
         flood = ' '.join(list(info.find('div', class_='flood').stripped_strings))
-        deal_house_info_bs = info.find('div', class_='dealHouseInfo')
-        if deal_house_info:
-            deal_house_info = ' '.join(list(deal_house_info_bs.stripped_strings))
         datum = {'city': city,
                  'title': title,
                  'address': address,
-                 'flood': flood,
-                 'house_info': deal_house_info
+                 'flood': flood
                  }
+        deal_house_info_bs = info.find('div', class_='dealHouseInfo')
+        if deal_house_info_bs:
+            deal_house_info = ' '.join(list(deal_house_info_bs.stripped_strings))
+            datum['deal_house_info'] = deal_huse_info
         data.append(datum)
     return data
 
