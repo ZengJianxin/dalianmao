@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime
+import json
 import os
 import random
 import time
@@ -24,6 +25,7 @@ class Client:
         self.proxies = []
         self.proxy_handler = None
         self.deny = [re.compile(deny) for deny in options.deny]
+        self.cookies_sent = False
 
     def get_proxy(self):
         if self.proxy_handler:
@@ -53,11 +55,10 @@ class Client:
         while True:
             try:
                 headers = self.options.headers
-                splitted_url = parse.urlsplit(url)
                 if referer:
                     headers['Referer'] = referer
                 else:
-                    headers['Referer'] = splitted_url.scheme + '://' + splitted_url.hostname
+                    headers['Referer'] = '/'.join(url.split('/')[:-1])
                 time.sleep(random.random()*self.options.magic)
                 if not self.options.dynamic:
                     resp = await self.session.get(
@@ -66,22 +67,28 @@ class Client:
                         proxy = proxy,
                         allow_redirects = self.options.allow_redirects,
                         max_redirects = self.options.max_redirects,
-                        timeout = self.options.timeout
+                        timeout = self.options.timeout,
                     )
                 else:
                     # work with Splash
-                    if splitted_url.scheme == 'https':
+                    if 'https' in url:
                         url_render = 'https://localhost:8051/render.html'
                     else:
                         url_render = 'http://localhost:8050/render.html'
-                    params = {'url': url}
-                    params['js_source'] = js_source
+                    data = {'url': url}
+                    if js_source:
+                        data['js_source'] = js_source
                     if proxy:
-                        params['proxy'] = proxy
-                    resp = await self.session.get(
+                        data['proxy'] = proxy
+                    if not self.cookies_sent and self.options.cookies:
+                        headers['Cookie'] = parse.urlencode(self.options.cookies).replace('&', ';')
+                        self.cookies.sent = True
+                    data['headers'] = headers
+                    resp = await self.session.post(
                         url=url_render,
-                        params=params,
-                        timeout=self.options.timeout
+                        timeout=self.options.timeout,
+                        data=json.dumps(data),
+                        headers={'Content-Type': 'application/json'}
                     )
             except:
                 traceback.print_exc()
