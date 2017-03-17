@@ -4,7 +4,6 @@ from dalianmao import DaLianMao, Options
 
 cityName = re.compile(r"(?<=cityName: ').*(?=')")
 city_name = re.compile(r"(?<=city_name: ').*(?=')")
-total_page = re.compile('\"totalPage\":[0-9]*')
 
 options = Options(name='lianjia',
                   start_urls= ['http://xm.lianjia.com/', ],
