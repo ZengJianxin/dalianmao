@@ -16,4 +16,5 @@ from dalianmao import Options, DaLianMao
 options = Options(name='wandoujia', start_urls=['http://www.wandoujia.com/apps', ])，
 <br>其它缺省项将在后面详述
 * 通过DaLianMao可以新建爬虫对象，使用时仅需传递Options对象<br>
-app = DaLianMao(options)<br>未完待续。。。
+app = DaLianMao(options)<br>
+未完待续。。。有兴趣的朋友可以先看以下examples，虽然其中并没有用到本框架所有功能
