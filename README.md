@@ -162,7 +162,7 @@ A basic route looks like following:
     ....
 ```
 
-### 7. Custom URLs Extractor
+### 7. Custom URLs Extractor for Specific URLs
 ```python
     ....
     def urls_extractor(soup):
