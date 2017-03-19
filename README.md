@@ -13,7 +13,7 @@ It's developed [on Github](<https://github.com/ZengJianxin/dalianmao>), contribu
 
 * Python 3.5+
 * aiohttp, aiofiles, BeautifulSoup, Motor, optional: uvloop
-* MongoDB, Splash if Options.dynamic is True
+* MongoDB, Splash if Options.dynamic is set to be True
 
 
 ## Installation
