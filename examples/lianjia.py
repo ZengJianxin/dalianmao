@@ -2,24 +2,25 @@ import re
 
 from dalianmao import DaLianMao, Options
 
-cityName = re.compile(r"(?<=cityName: ').*(?=')")
-city_name = re.compile(r"(?<=city_name: ').*(?=')")
+def get_cityname():
+    try:
+        cityname = re.compile(r"(?<=cityName: ').*(?=')")
+    except:
+        cityname = re.compile(r"(?<=city_name: ').*(?=')")
+    return cityname
 
 options = Options(name='lianjia',
-                  start_urls= ['http://xm.lianjia.com/', ],
-                  dynamic=True,
-                  concurrence=3,
-                  magic=5
-                 )
+    start_urls= ['http://xm.lianjia.com/', ],
+    dynamic=True,
+    concurrence=3,
+    magic=5
+)
 app = DaLianMao(options)
 
 @app.route(r'http://xm\.fang\.lianjia\.com/loupan/(pg[0-9]*/)?')
 async def loupan(url, soup):
     data = []
-    try:
-        city = cityName.search(str(soup)).group()
-    except:
-        city = city_name.search(str(soup)).group()
+    city = get_cityname()
     house_list = soup.find('ul', class_='house-lst').find_all('li')
     for house in house_list:
         info = house.find('div', class_='info-panel')
@@ -53,10 +54,7 @@ async def loupan(url, soup):
 @app.route(r'http://xm\.lianjia\.com/ershoufang/(pg[0-9]*/)?')
 async def ershoufang(url, soup):
     data = []
-    try:
-        city = cityName.search(str(soup)).group()
-    except:
-        city = city_name.search(str(soup)).group()
+    city = get_cityname()
     sell_list = soup.find('ul', class_='sellListContent').find_all('li')
     for sell in sell_list:
         info = sell.find('div', class_='info')
@@ -82,10 +80,7 @@ async def ershoufang(url, soup):
 @app.route(r'http://xm\.lianjia\.com/zufang/(pg[0-9]*/)?')
 async def zufang(url, soup):
     data = []
-    try:
-        city = cityName.search(str(soup)).group()
-    except:
-        city = city_name.search(str(soup)).group()
+    city = get_cityname()
     house_list = soup.find('ul', id='house-lst').find_all('li')
     for house in house_list:
         info = house.find('div', class_='info-panel')
@@ -116,10 +111,7 @@ async def zufang(url, soup):
 @app.route(r'http://xm\.lianjia\.com/xiaoqu/(pg[0-9]*/)?')
 async def xiaoqu(url, soup):
     data = []
-    try:
-        city = cityName.search(str(soup)).group()
-    except:
-        city = city_name.search(str(soup)).group()
+    city = get_cityname()
     xiaoqu_list = soup.find('ul', class_='listContent').find_all('li')
     for xiaoqu in xiaoqu_list:
         info = xiaoqu.find('div', class_='info')
@@ -146,10 +138,7 @@ async def xiaoqu(url, soup):
 @app.route(r'http://xm\.lianjia\.com/chengjiao/(pg[0-9]*/)?')
 async def chengjiao(url, soup):
     data = []
-    try:
-        city = cityName.search(str(soup)).group()
-    except:
-        city = city_name.search(str(soup)).group()
+    city = get_cityname()
     chengjiao_list = soup.find('ul', class_='listContent').find_all('li')
     for chengjiao in chengjiao_list:
         info = chengjiao.find('div', class_='info')
