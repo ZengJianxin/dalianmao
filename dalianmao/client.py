@@ -45,7 +45,7 @@ class Client:
 
     async def get(self, url, referer=None, js_source=None):
         if not self.session:
-            conn = TCPConnector(limit=self.options.concurrence, loop=self.loop)
+            conn = TCPConnector(limit=self.options.concurrence, loop=self.loop, verify_ssl=False)
             self.session = ClientSession(connector=conn,
                 loop=self.loop,
                 cookies=self.options.cookies

@@ -1,5 +1,6 @@
 import asyncio
 from random import choice
+from urllib import parse
 
 
 class Scheduler:
@@ -12,6 +13,8 @@ class Scheduler:
 
     async def put(self, urls):
         for url in urls:
+            o = parse.urlparse(url)
+            url = parse.urlunparse((o.scheme, o.netloc, o.path, '', '', ''))
             if url not in self.to_be_requested + self.requesting + self.requested:
                 await self.to_be_requested_q.put(url)
                 self.to_be_requested.append(url)
