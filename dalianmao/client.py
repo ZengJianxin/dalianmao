@@ -11,7 +11,7 @@ import aiofiles
 from aiohttp import TCPConnector, ClientSession
 from bs4 import BeautifulSoup as bs
 
-from dalianmao.exceptions import RetryError
+from dalianmao.exceptions import RetryError, ServerError
 
 
 class Client:
@@ -82,14 +82,17 @@ class Client:
                         data['proxy'] = proxy
                     if not self.cookies_sent and self.options.cookies:
                         headers['Cookie'] = parse.urlencode(self.options.cookies).replace('&', ';')
-                        self.cookies.sent = True
+                        self.cookies_sent = True
                     data['headers'] = headers
+                    data['timeout'] = 3*60
                     resp = await self.session.post(
                         url=url_render,
                         timeout=self.options.timeout,
                         data=json.dumps(data),
                         headers={'Content-Type': 'application/json'}
                     )
+                if resp.status // 100 == 5:
+                    raise ServerError()
             except:
                 traceback.print_exc()
                 retry += 1
@@ -118,13 +121,8 @@ class Client:
                 href = a['href']
                 if not href.startswith('http'):
                     href = parse.urljoin(url, href)
-            urls.append(href)
-        return urls
-
-    def urls_filter(self, urls):
-        for url in urls:
-            if not self.router.check_url(url) or self.is_denied(url):
-                urls.remove(url)
+            if self.router.check_url(href) and not self.is_denied(href):
+                urls.append(href)
         return urls
 
     async def get_data(self, url, handlers):
@@ -156,7 +154,7 @@ class Client:
                     urls = self.extract_urls(url, soup)
                 else:
                     urls = handlers['extract_urls'](url, soup)
-                urls = self.urls_filter(urls)
+                print(urls)
                 data = await handlers['handler'](url, soup)
             except:
                 message = 'Faild on parsing:' + ' ' + url + '\n' + traceback.format_exc()

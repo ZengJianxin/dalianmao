@@ -31,5 +31,4 @@ class Pipeline():
             await self.save_mongodb(name, data)
 
     async def close(self):
-        if self.conn:
-            await self.conn.close()
+        pass

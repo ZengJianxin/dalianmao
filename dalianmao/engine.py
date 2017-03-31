@@ -57,10 +57,10 @@ class Engine:
     async def close(self):
         await self.client.close()
         await self.pipeline.close()
-        await self.logger.close()
         await self.save_current_status()
         message = 'Spider closed'
         await self.logger.info(message)
+        await self.logger.close()
 
     async def _run(self):
         message = 'Spider opened'
