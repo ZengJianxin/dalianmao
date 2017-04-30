@@ -3,9 +3,9 @@ from distutils.core import setup
 
 setup_kwargs = {
     'name': 'dalianmao',
-    'version': '0.06',
+    'version': '0.07',
     'description': 'A Web Crawling and Web Scraping microframework based on uvloop and aiohttp',
-    'long_description': open('README.txt').read(),
+    'long_description': open('README.md', encoding='utf-8').read(),
     'packages': ['dalianmao',],
     'platforms': 'any',
     'license': 'MIT',
@@ -30,7 +30,8 @@ try:
         'motor>=1.1'
     ]
     setup_kwargs['install_requires'] = normal_requirements
-except DistutilsPlatformError as exception:
+    setup(**setup_kwargs)
+except RuntimeError as exception:
     windows_requirements = [
         'aiohttp>=1.3.3'
         'aiofiles>=0.3.0',
@@ -38,6 +39,6 @@ except DistutilsPlatformError as exception:
         'motor>=1.1'
     ]
     setup_kwargs['install_requires'] = windows_requirements
-setup(**setup_kwargs)
+    setup(**setup_kwargs)
 
 print('DaLianMao version {} successfully installed.'.format(setup_kwargs['version']))
