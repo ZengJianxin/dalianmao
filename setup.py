@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup_kwargs = {
     'name': 'dalianmao',
-    'version': '0.09',
+    'version': '0.10',
     'description': 'A Web Crawling and Web Scraping microframework based on aiohttp',
     'packages': ['dalianmao',],
     'platforms': 'any',
