@@ -18,7 +18,7 @@ setup_kwargs = {
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    'requirements': [
+    'install_requires': [
         'aiohttp>=1.3.3'
         'aiofiles>=0.3.0',
         'beautifulsoup4>=4.2.0',
